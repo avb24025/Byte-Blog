@@ -69,7 +69,7 @@ io.on("connection", (socket) => {
 });
 
 // Define the port
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // Start the server (REST API + WebSocket)
 server.listen(PORT, () => {
