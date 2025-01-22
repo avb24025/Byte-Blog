@@ -9,45 +9,29 @@ const blogRoutes = require("./routes/blog");
 
 // Initialize Express app
 const app = express();
+app.use(cors());
+app.use(express.json());
+connectDB();
 
-// Set up the HTTP server
+
 const server = http.createServer(app);
-
-// Allowed origins for CORS
-const allowedOrigins = ["https://bytesb.netlify.app/"];
-
-// Enable CORS middleware
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    methods: ["GET", "POST"],
-    credentials: true, // Allow credentials like cookies
-  })
-);
 
 // Set up Socket.IO on the same server
 const io = new Server(server, {
   cors: {
-    origin: allowedOrigins, // Allow these origins for WebSocket
+    origin: "*", // Allow all origins
     methods: ["GET", "POST"],
-    credentials: true,
+    credentials: false, // Disable credentials for open access
   },
 });
+/
 
-// Middleware to parse JSON
-app.use(express.json());
 
 // Serve static files from the uploads directory
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Connect to MongoDB
-connectDB();
+
 
 // Define routes
 app.use("/api/user", userRoutes);
